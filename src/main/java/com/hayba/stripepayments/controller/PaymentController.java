@@ -11,14 +11,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 public class PaymentController {
 
     @PostMapping("/create-payment-intent")
-    public CreatePaymentResponse createPaymentIntent(@RequestBody CreatePayment createPayment) throws StripeException {
+    public CreatePaymentResponse createPaymentIntent(@RequestBody @Valid CreatePayment createPayment) throws StripeException {
             PaymentIntentCreateParams createParams = new PaymentIntentCreateParams.Builder()
                     .setCurrency("usd")
-                    .setAmount(15 * 100L)
+                    .putMetadata("featureRequest", createPayment.getFeatureRequest())
+                    .setAmount(createPayment.getAmount() * 100L)
                     .build();
             // Create a PaymentIntent with the order amount and currency
             PaymentIntent intent = PaymentIntent.create(createParams);

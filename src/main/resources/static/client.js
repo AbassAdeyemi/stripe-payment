@@ -2,7 +2,8 @@
 var stripe = Stripe(stripePublicKey);
 // The items the customer wants to buy
 var purchase = {
-    items: [{ id: "xl-tshirt" }]
+    amount: amount,
+    featureRequest: featureRequest
 };
 // Disable the button until we have Stripe set up on the page
 document.querySelector("button").disabled = true;
@@ -56,9 +57,12 @@ var payWithCard = function(stripe, card, clientSecret) {
     loading(true);
     stripe
         .confirmCardPayment(clientSecret, {
-            receipt_email: document.getElementById('email').value,
+            receipt_email: email,
             payment_method: {
-                card: card
+                card: card,
+                billing_details: {
+                    email: email
+                }
             }
         })
         .then(function(result) {

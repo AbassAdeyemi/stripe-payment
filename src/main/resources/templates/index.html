@@ -1,40 +1,24 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
     <title>Accept a card payment</title>
     <meta name="description" content="A demo of a card payment on Stripe"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="stylesheet" href="global.css"/>
-    <script src="https://js.stripe.com/v3/"></script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
-    <script th:inline="javascript">
-
-        /*<![CDATA[*/
-
-        var stripePublicKey = /*[[${stripePublicKey}]]*/ null;
-
-        /*]]>*/
-    </script>
-    <script src="/client.js" defer></script>
-
 </head>
 <body>
 <!-- Display a payment form -->
-<form id="payment-form">
-    <p><b>Hayba group's payment channel</b></p>
-    <p>If you click on pay, you will be billed</p>
-    <input type="text" id="email" placeholder="Email address" />
-    <div id="card-element"><!--Stripe.js injects the Card Element--></div>
-    <button id="submit">
-        <div class="spinner hidden" id="spinner"></div>
-        <span id="button-text">Pay</span>
-    </button>
-    <p id="card-error" role="alert"></p>
-    <p class="result-message hidden">
-        Payment succeeded, see the result in your
-        <a href="" target="_blank">Stripe dashboard.</a> Refresh the page to pay again.
-    </p>
+<form id="payment-form" th:action="@{/checkout}" th:object="${checkoutForm}" method="post">
+<p><b>Welcome to the hayba's stripe integration</b></p>
+
+<p>Email: <input  type="text" th:field="*{email}" id="email" placeholder="Email address" required/></p>
+    <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color: red"> </p>
+<p>Amount: <input type="text" th:field="*{amount}" id="amount" placeholder="Amount" required/></p>
+    <p th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}" style="color: red;"> </p>
+<p>Feature Request: <input  th:field="*{featureRequest}" type="text" id="featureRequest" placeholder="Feature Request" required/></p>
+    <p th:if="${#fields.hasErrors('featureRequest')}" th:errors="*{featureRequest}" style="color: red"> </p>
+<p><input type="submit"/></p>
 </form>
 </body>
 </html>
